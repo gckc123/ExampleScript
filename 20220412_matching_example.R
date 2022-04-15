@@ -59,7 +59,8 @@ coefci(res, vcov. = vcovCL, cluster = ~subclass, level = 0.95)
 ################################################################################
 #
 # In this example, we will illustrate the use of propensity score matching to
-# to estimate the average treatment effect on the treated (ATT).
+# to estimate the average treatment effect on the treated (ATT) in the presence
+# of missing data.
 #
 ################################################################################
 
@@ -72,8 +73,11 @@ currentDataset <-
 #For other categorical variable with only 2 levels, this is option if the variable is coded as 0 and 1.
 currentDataset$remoteness <- factor(currentDataset$remoteness, exclude = c("", NA))
 
-#The MatchIt, lmtest and sandwich libraries are used.
+#The mice, MatchIt, lmtest and sandwich libraries are used.
 library(mice)
+library(MatchIt)
+library(lmtest)
+library(sandwich)
 
 #Below we specified the formula we used to impute each of the variables
 formulas <- make.formulas(currentDataset)
@@ -129,6 +133,7 @@ m <- max(currentDataset$.imp)
 coeftest_obj <- NULL
 matched_data <- NULL
 
+#conduct matching and outcome analysis in each imputed dataset
 for (i in (1:m)) {
   match_obj[[i]] <- matchit(smoker ~ sex + indigeneity + high_school + partnered + remoteness + language + risky_alcohol + age,
                             data = currentDataset[currentDataset$.imp == i,], method = "nearest", distance ="glm",
