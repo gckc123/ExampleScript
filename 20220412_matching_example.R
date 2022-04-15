@@ -73,11 +73,9 @@ currentDataset <-
 #For other categorical variable with only 2 levels, this is option if the variable is coded as 0 and 1.
 currentDataset$remoteness <- factor(currentDataset$remoteness, exclude = c("", NA))
 
-#The mice, MatchIt, lmtest and sandwich libraries are used.
+#The mice library is used.
 library(mice)
-library(MatchIt)
-library(lmtest)
-library(sandwich)
+
 
 #Below we specified the formula we used to impute each of the variables
 formulas <- make.formulas(currentDataset)
@@ -124,7 +122,6 @@ library(MatchIt)
 library(lmtest)
 library(sandwich)
 
-library(mice)
 match_obj <- NULL
 res <- NULL
 covar <- NULL
